@@ -8,6 +8,16 @@ class AromatizadorMiddleware{
     }
     next();
   }
+  async verifyBody(req, res, next){
+      const {fragrance,
+      description,
+      image,
+      price} = req.body;
+      if(!fragrance || !description || !image || !price){
+        return res.status(400).send("Missing attributes!");
+      }
+      next();
+  }
 }
 const aromatizadorMiddleware= new AromatizadorMiddleware;
 export default aromatizadorMiddleware;
