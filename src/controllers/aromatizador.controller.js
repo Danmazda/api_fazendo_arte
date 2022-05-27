@@ -13,7 +13,7 @@ class AromatizadorController {
     if (response.fragrance) {
       res.status(201).send(response);
     } else {
-      res.status(400).send("Error creating.");
+      res.status(400).send({ message: "Error creating." });
     }
   }
   async getById(req, res) {
@@ -28,18 +28,18 @@ class AromatizadorController {
     const { id } = req.params;
     try {
       const aromatizador = await aromatizadorService.updateOne(id, req.body);
-      res.status(200).send("updated.");
+      res.status(200).send({ message: "updated" });
     } catch (e) {
-      res.status(400).send(`${e.code}`);
+      res.status(400).send({ error: `${e.message}` });
     }
   }
   async deleteOne(req, res) {
     const { id } = req.params;
     const aromatizador = await aromatizadorService.deleteOne(id);
     if (aromatizador.deletedCount === 1) {
-      return res.status(200).send("deleted.");
+      return res.status(200).send({ message: "Deleted" });
     } else {
-      return res.status(404).send("Failed to delete.");
+      return res.status(404).send({ message: "Can't find id" });
     }
   }
 }
