@@ -4,7 +4,7 @@ class AromatizadorController {
   async getAll(req, res) {
     const aromatizadores = await aromatizadorService.getAll();
     if (aromatizadores.length === 0) {
-      return res.status(404).send("No fragrance in the database.");
+      return res.status(404).send({ error: "No fragrance in the database." });
     }
     res.send(aromatizadores);
   }
@@ -20,7 +20,7 @@ class AromatizadorController {
     const { id } = req.params;
     const aromatizador = await aromatizadorService.getById(id);
     if (!aromatizador) {
-      return res.status(404).send("Fragrance not found");
+      return res.status(404).send({ error: "Fragrance not found." });
     }
     res.send(aromatizador);
   }
