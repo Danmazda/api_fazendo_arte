@@ -1,5 +1,5 @@
-import app, {connectToDb} from './app.js';
-app.listen(3000, ()=>{
+import app, { connectToDb } from "./app.js";
+app.listen(process.env.PORT, () => {
   connectToDb();
-  console.log('server listening on port 3000');
+  console.log("server listening on port 3000");
 });
