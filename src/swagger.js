@@ -119,7 +119,7 @@ export default {
       },
     },
     "aromatizador/update/{id}": {
-      post: {
+      put: {
         summary: "Atualizar um aromatizador.",
         description: "Atualiza um aromatizador já existente na loja.",
         tags: ["Aromatizadores"],
@@ -173,7 +173,7 @@ export default {
       },
     },
     "aromatizador/delete/{id}": {
-      post: {
+      delete: {
         summary: "Deletar um aromatizador.",
         description:
           "Deletar um aromatizador já existente na loja, a partir do Id.",

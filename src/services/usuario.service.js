@@ -1,4 +1,5 @@
 import UsuarioModel from "../models/usuario.model.js";
+import bcrypt from "bcrypt";
 class UsuarioService {
   async getAll() {
     const usuarios = await UsuarioModel.find();
@@ -6,7 +7,9 @@ class UsuarioService {
   }
   async create(body) {
     try {
-      const res = await UsuarioModel.create(body);
+      let { password } = body;
+      password = await bcrypt.hash(password, 2);
+      const res = await UsuarioModel.create({ ...body, password });
       return res;
     } catch (e) {
       throw e;
@@ -31,6 +34,16 @@ class UsuarioService {
     } catch (e) {
       console.log(e.message);
       return e.message;
+    }
+  }
+  async signIn(body) {
+    const { email, password } = body;
+    try {
+      const user = await UsuarioModel.findOne({ email });
+      const check = await bcrypt.compare(password, user.password);
+      return check;
+    } catch (e) {
+      throw e;
     }
   }
 }

@@ -42,6 +42,16 @@ class UsuarioController {
       return res.status(404).send({ message: "Can't find user id" });
     }
   }
+
+  async signIn(req, res) {
+    console.log(req.body);
+    try {
+      const check = await usuarioService.signIn(req.body);
+      return res.status(200).send({ check });
+    } catch (e) {
+      res.status(400).send({ error: `${e.message}` });
+    }
+  }
 }
 const usuarioController = new UsuarioController();
 export default usuarioController;
