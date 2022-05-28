@@ -10,17 +10,20 @@ usuarioRouter.get(
 );
 usuarioRouter.post(
   "/create",
+  usuarioMiddleware.verifyJwt,
   usuarioMiddleware.verifyBody,
   usuarioController.create
 );
 usuarioRouter.put(
   "/update/:id",
+  usuarioMiddleware.verifySameUser,
   usuarioMiddleware.verifyId,
   usuarioMiddleware.verifyBody,
   usuarioController.updateOne
 );
 usuarioRouter.delete(
   "/delete/:id",
+  usuarioMiddleware.verifyJwt,
   usuarioMiddleware.verifyId,
   usuarioController.deleteOne
 );

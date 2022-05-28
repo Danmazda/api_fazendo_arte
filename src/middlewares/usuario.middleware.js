@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-
+import usuarioService from "../services/usuario.service.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 class UsuarioMiddleware {
   async verifyId(req, res, next) {
     const { id } = req.params;
@@ -31,6 +34,39 @@ class UsuarioMiddleware {
       return res.status(400).send({ error: "Missing Attributes!" });
     }
     next();
+  }
+  async verifyJwt(req, res, next) {
+    let { authorization } = req.headers;
+    try {
+      authorization = authorization.split(" ");
+      const token = authorization[1];
+      const verified = jwt.verify(token, `${process.env.JWTKEY}`);
+      if (verified.adm === true) {
+        next();
+      } else {
+        throw new Error("User not allowed");
+      }
+    } catch (e) {
+      console.log(e.message);
+      return res.status(404).send({ error: "Operação não autorizada" });
+    }
+  }
+  async verifySameUser(req, res, next) {
+    let { authorization } = req.headers;
+    try {
+      authorization = authorization.split(" ");
+      const token = authorization[1];
+      const verified = jwt.verify(token, `${process.env.JWTKEY}`);
+      const user = await usuarioService.getById(req.params.id);
+      if (verified.email === user.email) {
+        next();
+      } else {
+        throw new Error("Not the same user");
+      }
+    } catch (e) {
+      console.log(e.message);
+      return res.status(404).send({ error: "Operação não autorizada" });
+    }
   }
 }
 const usuarioMiddleware = new UsuarioMiddleware();

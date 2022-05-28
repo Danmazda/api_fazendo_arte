@@ -10,6 +10,7 @@ class UsuarioController {
   }
   async create(req, res) {
     try {
+      console.log(req.body);
       const response = await usuarioService.create(req.body);
       return res.status(201).send(response);
     } catch (e) {
@@ -46,8 +47,8 @@ class UsuarioController {
   async signIn(req, res) {
     console.log(req.body);
     try {
-      const check = await usuarioService.signIn(req.body);
-      return res.status(200).send({ check });
+      const token = await usuarioService.signIn(req.body);
+      return res.status(200).send({ token });
     } catch (e) {
       res.status(400).send({ error: `${e.message}` });
     }

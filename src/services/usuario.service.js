@@ -1,5 +1,8 @@
 import UsuarioModel from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 class UsuarioService {
   async getAll() {
     const usuarios = await UsuarioModel.find();
@@ -9,8 +12,8 @@ class UsuarioService {
     try {
       let { password } = body;
       password = await bcrypt.hash(password, 2);
-      const res = await UsuarioModel.create({ ...body, password });
-      return res;
+      const mongoResponse = await UsuarioModel.create({ ...body, password });
+      return mongoResponse;
     } catch (e) {
       throw e;
     }
@@ -41,7 +44,15 @@ class UsuarioService {
     try {
       const user = await UsuarioModel.findOne({ email });
       const check = await bcrypt.compare(password, user.password);
-      return check;
+      if (check) {
+        return jwt.sign(
+          { email: user.email, adm: user.adm },
+          `${process.env.JWTKEY}`,
+          { expiresIn: "2h" }
+        );
+      } else {
+        throw new Error("Senha inválida");
+      }
     } catch (e) {
       throw e;
     }

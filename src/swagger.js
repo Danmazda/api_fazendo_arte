@@ -15,7 +15,7 @@ export default {
       description: "API de teste",
     },
     {
-      url: "https://api-elgeladon-danmazda.onrender.com/aromatizador",
+      url: "https://apifazendoarte-production.up.railway.app/aromatizador",
       description: "API de produção",
     },
   ],
