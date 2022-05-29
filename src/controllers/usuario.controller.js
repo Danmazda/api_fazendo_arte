@@ -46,8 +46,8 @@ class UsuarioController {
 
   async signIn(req, res) {
     try {
-      const token = await usuarioService.signIn(req.body);
-      return res.status(200).send({ token });
+      const obj = await usuarioService.signIn(req.body);
+      return res.status(200).send(obj);
     } catch (e) {
       res.status(400).send({ error: `${e.message}` });
     }
@@ -60,10 +60,20 @@ class UsuarioController {
     res.status(200).send({ message });
   }
 
-  async deleteItemFromCart(req, res){
+  async deleteItemFromCart(req, res) {
     const idUser = req.params.id;
     const idProduct = req.body.product;
     const message = await usuarioService.deleteItemFromCart(idUser, idProduct);
+    res.status(200).send({ message });
+  }
+
+  async deleteOneItemFromCart(req, res) {
+    const idUser = req.params.id;
+    const idProduct = req.body.product;
+    const message = await usuarioService.deleteOneItemFromCart(
+      idUser,
+      idProduct
+    );
     res.status(200).send({ message });
   }
 

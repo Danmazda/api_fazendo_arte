@@ -47,8 +47,7 @@ class UsuarioMiddleware {
         throw new Error("User not allowed");
       }
     } catch (e) {
-      console.log(e.message);
-      return res.status(404).send({ error: "Operação não autorizada" });
+      return res.status(404).send({ error: "Autorização necessária" });
     }
   }
   async verifySameUser(req, res, next) {

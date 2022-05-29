@@ -10,7 +10,6 @@ usuarioRouter.get(
 );
 usuarioRouter.post(
   "/create",
-  usuarioMiddleware.verifyJwt,
   usuarioMiddleware.verifyBody,
   usuarioController.create
 );
@@ -36,6 +35,11 @@ usuarioRouter.post(
   "/additem/:id",
   usuarioMiddleware.verifyId,
   usuarioController.addItemToCart
+);
+usuarioRouter.delete(
+  "/deleteoneitem/:id",
+  usuarioMiddleware.verifyId,
+  usuarioController.deleteOneItemFromCart
 );
 usuarioRouter.delete(
   "/deleteitem/:id",

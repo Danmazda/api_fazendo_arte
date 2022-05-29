@@ -50,11 +50,12 @@ class UsuarioService {
       const user = await UsuarioModel.findOne({ email });
       const check = await bcrypt.compare(password, user.password);
       if (check) {
-        return jwt.sign(
+        const token = jwt.sign(
           { email: user.email, adm: user.adm },
           `${process.env.JWTKEY}`,
           { expiresIn: "2h" }
         );
+        return { token, name: user.name, adm: user.adm };
       } else {
         throw new Error("Senha inválida");
       }
@@ -67,7 +68,16 @@ class UsuarioService {
     try {
       const user = await UsuarioModel.findById(idUser);
       const product = await AromatizadorModel.findById(idProduct);
-      user.cart.push({ product, quantity: 1 });
+      if (user.cart.length === 0) {
+        user.cart.push({ product, quantity: 1 });
+      } else {
+        const index = user.cart.findIndex((p) => product._id.equals(p.product));
+        if (index === -1) {
+          user.cart.push({ product, quantity: 1 });
+        } else {
+          user.cart[index].quantity += 1;
+        }
+      }
       user.save();
       return "Saved";
     } catch (error) {
@@ -79,10 +89,28 @@ class UsuarioService {
     try {
       const user = await UsuarioModel.findById(idUser);
       const product = await AromatizadorModel.findById(idProduct);
-
       const index = user.cart.findIndex((p) => product._id.equals(p.product));
       console.log(index);
       user.cart.splice(index, 1);
+      user.save();
+      return "Saved";
+    } catch (error) {
+      return e.message;
+    }
+  }
+
+  async deleteOneItemFromCart(idUser, idProduct) {
+    try {
+      const user = await UsuarioModel.findById(idUser);
+      const product = await AromatizadorModel.findById(idProduct);
+      const index = user.cart.findIndex((p) => product._id.equals(p.product));
+      if (index === -1) {
+        return "Not found";
+      }
+      user.cart[index].quantity -= 1;
+      if (user.cart[index].quantity <= 0) {
+        user.cart.splice(index, 1);
+      }
       user.save();
       return "Saved";
     } catch (error) {
