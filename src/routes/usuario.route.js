@@ -32,5 +32,20 @@ usuarioRouter.post(
   usuarioMiddleware.verifyBodySignIn,
   usuarioController.signIn
 );
+usuarioRouter.post(
+  "/additem/:id",
+  usuarioMiddleware.verifyId,
+  usuarioController.addItemToCart
+);
+usuarioRouter.delete(
+  "/deleteitem/:id",
+  usuarioMiddleware.verifyId,
+  usuarioController.deleteItemFromCart
+);
+usuarioRouter.delete(
+  "/clearcart/:id",
+  usuarioMiddleware.verifyId,
+  usuarioController.clearCart
+);
 
 export default usuarioRouter;

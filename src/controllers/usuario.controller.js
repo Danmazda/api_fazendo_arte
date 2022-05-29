@@ -45,13 +45,32 @@ class UsuarioController {
   }
 
   async signIn(req, res) {
-    console.log(req.body);
     try {
       const token = await usuarioService.signIn(req.body);
       return res.status(200).send({ token });
     } catch (e) {
       res.status(400).send({ error: `${e.message}` });
     }
+  }
+
+  async addItemToCart(req, res) {
+    const idUser = req.params.id;
+    const idProduct = req.body.product;
+    const message = await usuarioService.addItemToCart(idUser, idProduct);
+    res.status(200).send({ message });
+  }
+
+  async deleteItemFromCart(req, res){
+    const idUser = req.params.id;
+    const idProduct = req.body.product;
+    const message = await usuarioService.deleteItemFromCart(idUser, idProduct);
+    res.status(200).send({ message });
+  }
+
+  async clearCart(req, res) {
+    const idUser = req.params.id;
+    const message = await usuarioService.clearCart(idUser);
+    res.status(200).send({ message });
   }
 }
 const usuarioController = new UsuarioController();

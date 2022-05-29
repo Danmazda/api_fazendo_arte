@@ -2,10 +2,15 @@ import UsuarioModel from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import AromatizadorModel from "../models/aromatizador.model.js";
+import mongoose from "mongoose";
 dotenv.config();
 class UsuarioService {
   async getAll() {
-    const usuarios = await UsuarioModel.find();
+    const usuarios = await UsuarioModel.find().populate({
+      path: "cart",
+      select: "product",
+    });
     return usuarios;
   }
   async create(body) {
@@ -55,6 +60,44 @@ class UsuarioService {
       }
     } catch (e) {
       throw e;
+    }
+  }
+
+  async addItemToCart(idUser, idProduct) {
+    try {
+      const user = await UsuarioModel.findById(idUser);
+      const product = await AromatizadorModel.findById(idProduct);
+      user.cart.push({ product, quantity: 1 });
+      user.save();
+      return "Saved";
+    } catch (error) {
+      return e.message;
+    }
+  }
+
+  async deleteItemFromCart(idUser, idProduct) {
+    try {
+      const user = await UsuarioModel.findById(idUser);
+      const product = await AromatizadorModel.findById(idProduct);
+
+      const index = user.cart.findIndex((p) => product._id.equals(p.product));
+      console.log(index);
+      user.cart.splice(index, 1);
+      user.save();
+      return "Saved";
+    } catch (error) {
+      return e.message;
+    }
+  }
+
+  async clearCart(idUser) {
+    try {
+      const user = await UsuarioModel.findById(idUser);
+      user.cart = [];
+      user.save();
+      return "Saved";
+    } catch (error) {
+      return e.message;
     }
   }
 }
