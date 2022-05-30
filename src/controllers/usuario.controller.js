@@ -25,6 +25,15 @@ class UsuarioController {
     }
     res.send(usuario);
   }
+
+  async getByEmail(req, res){
+    const { email } = req.body;
+    const usuario = await usuarioService.getByEmail(email);
+    if (!usuario) {
+      return res.status(404).send({ error: "User not found." });
+    }
+    res.send(usuario);
+  }
   async updateOne(req, res) {
     const { id } = req.params;
     try {

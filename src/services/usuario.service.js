@@ -7,10 +7,7 @@ import mongoose from "mongoose";
 dotenv.config();
 class UsuarioService {
   async getAll() {
-    const usuarios = await UsuarioModel.find().populate({
-      path: "cart",
-      select: "product",
-    });
+    const usuarios = await UsuarioModel.find();
     return usuarios;
   }
   async create(body) {
@@ -24,7 +21,17 @@ class UsuarioService {
     }
   }
   async getById(id) {
-    const usuario = await UsuarioModel.findById(id);
+    const usuario = await UsuarioModel.findById(id).populate({
+      path: "cart",
+      populate: { path: "product" },
+    });
+    return usuario;
+  }
+  async getByEmail(email) {
+    const usuario = await UsuarioModel.findOne({ email }).populate({
+      path: "cart",
+      populate: { path: "product" },
+    });
     return usuario;
   }
   async updateOne(id, body) {
@@ -55,7 +62,7 @@ class UsuarioService {
           `${process.env.JWTKEY}`,
           { expiresIn: "2h" }
         );
-        return { token, name: user.name, adm: user.adm };
+        return { token, name: user.name, adm: user.adm, email: user.email };
       } else {
         throw new Error("Senha inválida");
       }

@@ -9,6 +9,11 @@ usuarioRouter.get(
   usuarioController.getById
 );
 usuarioRouter.post(
+  "/email",
+  usuarioMiddleware.verifyJwt,
+  usuarioController.getByEmail
+);
+usuarioRouter.post(
   "/create",
   usuarioMiddleware.verifyBody,
   usuarioController.create
