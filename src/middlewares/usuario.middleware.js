@@ -56,15 +56,14 @@ class UsuarioMiddleware {
       authorization = authorization.split(" ");
       const token = authorization[1];
       const verified = jwt.verify(token, `${process.env.JWTKEY}`);
-      const user = await usuarioService.getById(req.params.id);
+      const user = await usuarioService.getByEmail(req.body.email); 
       if (verified.email === user.email) {
         next();
       } else {
         throw new Error("Not the same user");
       }
     } catch (e) {
-      console.log(e.message);
-      return res.status(404).send({ error: "Operação não autorizada" });
+      return res.status(404).send({ error: e.message });
     }
   }
 }

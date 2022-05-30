@@ -26,7 +26,7 @@ class UsuarioController {
     res.send(usuario);
   }
 
-  async getByEmail(req, res){
+  async getByEmail(req, res) {
     const { email } = req.body;
     const usuario = await usuarioService.getByEmail(email);
     if (!usuario) {
@@ -63,24 +63,25 @@ class UsuarioController {
   }
 
   async addItemToCart(req, res) {
-    const idUser = req.params.id;
-    const idProduct = req.body.product;
-    const message = await usuarioService.addItemToCart(idUser, idProduct);
+    const product = req.body.product;
+    const email = req.body.email;
+    const message = await usuarioService.addItemToCart(email, product);
     res.status(200).send({ message });
   }
 
   async deleteItemFromCart(req, res) {
-    const idUser = req.params.id;
+    const email = req.body.email;
     const idProduct = req.body.product;
-    const message = await usuarioService.deleteItemFromCart(idUser, idProduct);
+    console.log(email);
+    const message = await usuarioService.deleteItemFromCart(email, idProduct);
     res.status(200).send({ message });
   }
 
   async deleteOneItemFromCart(req, res) {
-    const idUser = req.params.id;
+    const email = req.body.email;
     const idProduct = req.body.product;
     const message = await usuarioService.deleteOneItemFromCart(
-      idUser,
+      email,
       idProduct
     );
     res.status(200).send({ message });

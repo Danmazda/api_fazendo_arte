@@ -10,7 +10,7 @@ usuarioRouter.get(
 );
 usuarioRouter.post(
   "/email",
-  usuarioMiddleware.verifyJwt,
+  usuarioMiddleware.verifySameUser,
   usuarioController.getByEmail
 );
 usuarioRouter.post(
@@ -37,13 +37,11 @@ usuarioRouter.post(
   usuarioController.signIn
 );
 usuarioRouter.post(
-  "/additem/:id",
-  usuarioMiddleware.verifyId,
+  "/additem",
   usuarioController.addItemToCart
 );
 usuarioRouter.delete(
-  "/deleteoneitem/:id",
-  usuarioMiddleware.verifyId,
+  "/deleteoneitem",
   usuarioController.deleteOneItemFromCart
 );
 usuarioRouter.delete(

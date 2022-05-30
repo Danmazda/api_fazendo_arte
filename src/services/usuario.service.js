@@ -55,6 +55,9 @@ class UsuarioService {
     const { email, password } = body;
     try {
       const user = await UsuarioModel.findOne({ email });
+      if (!user) {
+        throw new Error("User not found!");
+      }
       const check = await bcrypt.compare(password, user.password);
       if (check) {
         const token = jwt.sign(
@@ -71,9 +74,9 @@ class UsuarioService {
     }
   }
 
-  async addItemToCart(idUser, idProduct) {
+  async addItemToCart(email, idProduct) {
     try {
-      const user = await UsuarioModel.findById(idUser);
+      const user = await UsuarioModel.findOne({ email });
       const product = await AromatizadorModel.findById(idProduct);
       if (user.cart.length === 0) {
         user.cart.push({ product, quantity: 1 });
@@ -87,28 +90,34 @@ class UsuarioService {
       }
       user.save();
       return "Saved";
-    } catch (error) {
+    } catch (e) {
       return e.message;
     }
   }
 
-  async deleteItemFromCart(idUser, idProduct) {
+  async deleteItemFromCart(email, idProduct) {
     try {
-      const user = await UsuarioModel.findById(idUser);
+      const user = await UsuarioModel.findOne({ email });
+      if (!user) {
+        throw new Error("User not found!");
+      }
       const product = await AromatizadorModel.findById(idProduct);
       const index = user.cart.findIndex((p) => product._id.equals(p.product));
       console.log(index);
       user.cart.splice(index, 1);
       user.save();
       return "Saved";
-    } catch (error) {
+    } catch (e) {
       return e.message;
     }
   }
 
-  async deleteOneItemFromCart(idUser, idProduct) {
+  async deleteOneItemFromCart(email, idProduct) {
     try {
-      const user = await UsuarioModel.findById(idUser);
+      const user = await UsuarioModel.findOne({ email });
+      if (!user) {
+        throw new Error("User not found!");
+      }
       const product = await AromatizadorModel.findById(idProduct);
       const index = user.cart.findIndex((p) => product._id.equals(p.product));
       if (index === -1) {
@@ -120,7 +129,7 @@ class UsuarioService {
       }
       user.save();
       return "Saved";
-    } catch (error) {
+    } catch (e) {
       return e.message;
     }
   }
@@ -131,7 +140,7 @@ class UsuarioService {
       user.cart = [];
       user.save();
       return "Saved";
-    } catch (error) {
+    } catch (e) {
       return e.message;
     }
   }
