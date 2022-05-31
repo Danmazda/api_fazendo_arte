@@ -36,17 +36,11 @@ usuarioRouter.post(
   usuarioMiddleware.verifyBodySignIn,
   usuarioController.signIn
 );
-usuarioRouter.post(
-  "/additem",
-  usuarioController.addItemToCart
-);
+usuarioRouter.post("/additem", usuarioController.addItemToCart);
+usuarioRouter.delete("/deleteoneitem", usuarioController.deleteOneItemFromCart);
 usuarioRouter.delete(
-  "/deleteoneitem",
-  usuarioController.deleteOneItemFromCart
-);
-usuarioRouter.delete(
-  "/deleteitem/:id",
-  usuarioMiddleware.verifyId,
+  "/deleteitem/",
+  usuarioMiddleware.verifySameUser,
   usuarioController.deleteItemFromCart
 );
 usuarioRouter.delete(
